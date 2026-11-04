@@ -61,31 +61,31 @@ public class Main extends EngineFrame {
             telaAtual = TELA_MENU;
         }
         
-        // inserção de chaves (por enquanto só a ABB está implementada)
-        if ( telaAtual == TELA_ABB && isMouseButtonPressed( MOUSE_BUTTON_LEFT ) ) {
+        if ( (telaAtual == TELA_ABB || telaAtual == TELA_AVL || telaAtual == TELA_VP) && isMouseButtonPressed( MOUSE_BUTTON_LEFT ) ) {
             
             String entrada = JOptionPane.showInputDialog( "Chave" );
-            
-            // entrada == null quando o usuário cancela o diálogo
             if ( entrada != null ) {
                 try {
-                    abb.put( Integer.parseInt( entrada.trim() ) );
+                    
+                    switch( telaAtual ) {
+                        case TELA_ABB:
+                            abb.put( Integer.parseInt( entrada.trim() ) );
+                            break;
+                        case TELA_AVL:
+                            avl.put( Integer.parseInt( entrada.trim() ) );
+                            break;
+                        case TELA_VP:
+                            vp.put( Integer.parseInt( entrada.trim() ) );
+                            break;
+                    }
+                    
                 } catch ( NumberFormatException ex ) {
+                    
                     JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
+                    
                 }
             }
             
-        } else if(telaAtual == TELA_AVL && isMouseButtonPressed( MOUSE_BUTTON_LEFT )){
-            String entrada = JOptionPane.showInputDialog( "Chave" );
-            
-            // entrada == null quando o usuário cancela o diálogo
-            if ( entrada != null ) {
-                try {
-                    abb.put( Integer.parseInt( entrada.trim() ) );
-                } catch ( NumberFormatException ex ) {
-                    JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
-                }
-            }
         }
         
     }
@@ -106,7 +106,7 @@ public class Main extends EngineFrame {
                 break;
             case TELA_VP:
                 vp.desenhar( this );
-                drawText( "Backspace: menu", 10, 10, BLACK );
+                drawText( "Clique: Inserir Chave | Backspace: menu", 10, 10, BLACK );
                 break;
             default:
                 drawText( "1 - ABB (Arvore de Busca Binaria)", 100, 100, BLACK );

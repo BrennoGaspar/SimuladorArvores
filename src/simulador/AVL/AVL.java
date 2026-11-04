@@ -31,7 +31,7 @@ public class AVL {
     private No put( No no, int c ) {
         
         if ( no == null ) {
-            no = new No( RAIO );
+            no = new No( RAIO, false );
             no.setC( c );
             no.setAltura( 1 );
             return no;
@@ -78,12 +78,11 @@ public class AVL {
     
       
     private No rotacaoDireita( No y ) {
-     
+        return null;
     }
     
     private No rotacaoEsquerda( No x ) {
-        
-        
+        return null;
     }
     
     private int altura( No no ) {

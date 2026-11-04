@@ -2,6 +2,7 @@ package simulador;
 
 import br.com.davidbuzatto.jsge.core.engine.EngineFrame;
 import br.com.davidbuzatto.jsge.math.Vector2;
+import java.awt.Color;
 
 /**
  * @author Brenno Gaspar Pinto & Victor Altran Soares
@@ -11,25 +12,35 @@ public class No {
     private int c;
     private No e;
     private No d;
+    private boolean red;
+    private Color fonte;
     
     private Vector2 pos;
     private int nivel;
     private int ranque;
     private int raio;
     
-    public No( int raio ) {
+    public No( int raio, boolean red ) {
         this.pos = new Vector2();
         this.raio = raio;
+        this.red = red;
     }
 
     public void desenhar( EngineFrame engine ) {
         
-        engine.fillCircle( pos, raio, EngineFrame.WHITE );
-        engine.drawCircle( pos, raio, EngineFrame.BLACK );
+        if( red ) {
+            engine.fillCircle( pos, raio, EngineFrame.RED );
+            engine.drawCircle( pos, raio, EngineFrame.BLACK );
+            fonte = Color.WHITE;
+        } else {
+            engine.fillCircle( pos, raio, EngineFrame.WHITE );
+            engine.drawCircle( pos, raio, EngineFrame.BLACK );
+            fonte = Color.BLACK;
+        }
         
         String label = String.valueOf( c );
         int larg = engine.measureText( label );
-        engine.drawText( label, pos.x - larg / 2, pos.y - 10, EngineFrame.BLACK );
+        engine.drawText( label, pos.x - larg / 2, pos.y - 10, fonte );
                 
     }
     
@@ -66,6 +77,10 @@ public class No {
     public int getRaio() {
         return raio;
     }
+
+    public boolean isRed() {
+        return red;
+    }
     
     // Setters
     public void setC(int c) {
@@ -94,6 +109,14 @@ public class No {
 
     public void setRaio(int raio) {
         this.raio = raio;
+    }
+
+    public void changeRed() {
+        this.red = !this.red;
+    }
+    
+    public void setRed( boolean red ) {
+        this.red = red;
     }
     
     private int altura = 1;

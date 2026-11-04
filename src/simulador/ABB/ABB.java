@@ -11,15 +11,15 @@ import simulador.No;
  */
 public class ABB {
     
-    private No raiz;
-    private int ranqueAtual;
-    private final List<No> nosDesenho = new ArrayList<>();
-
     private final int RAIO = 20;
     private final double ESPHOR = 50;
     private final double ESPVERT = 50;
     private final int MARGEMHOR = 50;
     private final int MARGEMVERT = 50;
+    
+    private No raiz;
+    private int ranqueAtual;
+    private final List<No> nosDesenho = new ArrayList<>();
     
     public void put( int c ) {
         
@@ -31,7 +31,7 @@ public class ABB {
     private No put( No no, int c ) {
         
         if ( no == null ) {
-            no = new No( RAIO );
+            no = new No( RAIO, false );
             no.setC( c );
         } else {
             
@@ -46,23 +46,6 @@ public class ABB {
         }
         
         return no;
-        
-    }
-    
-    public void emOrdem() {
-        
-        emOrdem( raiz );
-        System.out.println();
-        
-    }
-    
-    private void emOrdem( No no ) {
-        
-        if ( no != null ) {
-            emOrdem( no.getE() );
-            System.out.println( no );
-            emOrdem( no.getD() );
-        }
         
     }
     
