@@ -35,12 +35,6 @@ public class Main extends EngineFrame {
         avl = new AVL();
         vp = new VP();
         
-        abb.put( 20 );
-        abb.put( 10 );
-        abb.put( 15 );
-        abb.put( 5 );
-        abb.put( 30 );
-        
         telaAtual = TELA_MENU;
         
         setDefaultFontSize( 20 );
@@ -51,11 +45,11 @@ public class Main extends EngineFrame {
     public void update( double delta ) {
         
         // escolha da tela (a mudança de tela é só um estado, o desenho fica no draw)
-        if ( isKeyPressed( KEY_ONE ) ) {
+        if ( isKeyPressed( KEY_ONE ) || (telaAtual == TELA_AVL && isKeyPressed(KEY_LEFT)) ) {
             telaAtual = TELA_ABB;
-        } else if ( isKeyPressed( KEY_TWO ) ) {
+        } else if ( isKeyPressed( KEY_TWO ) || (telaAtual == TELA_ABB && isKeyPressed(KEY_RIGHT)) || (telaAtual == TELA_VP && isKeyPressed(KEY_LEFT)) ) {
             telaAtual = TELA_AVL;
-        } else if ( isKeyPressed( KEY_THREE ) ) {
+        } else if ( isKeyPressed( KEY_THREE ) || (telaAtual == TELA_AVL && isKeyPressed(KEY_RIGHT)) ) {
             telaAtual = TELA_VP;
         } else if ( isKeyPressed( KEY_BACKSPACE ) ) {
             telaAtual = TELA_MENU;
@@ -66,7 +60,6 @@ public class Main extends EngineFrame {
             String entrada = JOptionPane.showInputDialog( "Chave" );
             if ( entrada != null ) {
                 try {
-                    
                     switch( telaAtual ) {
                         case TELA_ABB:
                             abb.put( Integer.parseInt( entrada.trim() ) );
@@ -78,16 +71,34 @@ public class Main extends EngineFrame {
                             vp.put( Integer.parseInt( entrada.trim() ) );
                             break;
                     }
-                    
                 } catch ( NumberFormatException ex ) {
-                    
                     JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
-                    
                 }
             }
             
         }
         
+        if ( (telaAtual == TELA_ABB || telaAtual == TELA_AVL || telaAtual == TELA_VP) && isMouseButtonPressed( MOUSE_BUTTON_RIGHT ) ) {
+            
+            int mouseX = getMouseX();
+            int mouseY = getMouseY();
+            try {
+                switch( telaAtual ) {
+                    case TELA_ABB:
+                        //abb.rem( mouseX, mouseY );
+                        break;
+                    case TELA_AVL:
+                        //avl.rem( mouseX, mouseY );
+                        break;
+                    case TELA_VP:
+                        //vp.rem( mouseX, mouseY );
+                        break;
+                }
+            } catch ( NumberFormatException ex ) {
+                JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
+            }
+        }
+
     }
     
     @Override
@@ -98,15 +109,18 @@ public class Main extends EngineFrame {
         switch ( telaAtual ) {
             case TELA_ABB:
                 abb.desenhar( this );
-                drawText( "Clique: Inserir Chave | Backspace: menu", 10, 10, BLACK );
+                drawText( "Arvore Binaria de Busca", 10, 10, BLACK );
+                drawText( "Clique: Inserir Chave | Backspace: menu", 10, 30, BLACK );
                 break;
             case TELA_AVL:
                 avl.desenhar( this );
-                drawText( "Clique: Inserir Chave | Backspace: menu", 10, 10, BLACK );
+                drawText( "Arvore AVL", 10, 10, BLACK );
+                drawText( "Clique: Inserir Chave | Backspace: menu", 10, 30, BLACK );
                 break;
             case TELA_VP:
                 vp.desenhar( this );
-                drawText( "Clique: Inserir Chave | Backspace: menu", 10, 10, BLACK );
+                drawText( "Arvore Vermelha e Preta", 10, 10, BLACK );
+                drawText( "Clique: Inserir Chave | Backspace: menu", 10, 30, BLACK );
                 break;
             default:
                 drawText( "1 - ABB (Arvore de Busca Binaria)", 100, 100, BLACK );
