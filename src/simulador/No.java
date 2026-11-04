@@ -96,4 +96,13 @@ public class No {
         this.raio = raio;
     }
     
+    private int altura = 1;
+
+    public int getAltura() {
+        return altura;
+    }
+
+    public void setAltura( int altura ) {
+        this.altura = altura;
+    }  
 }

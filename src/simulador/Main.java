@@ -75,6 +75,17 @@ public class Main extends EngineFrame {
                 }
             }
             
+        } else if(telaAtual == TELA_AVL && isMouseButtonPressed( MOUSE_BUTTON_LEFT )){
+            String entrada = JOptionPane.showInputDialog( "Chave" );
+            
+            // entrada == null quando o usuário cancela o diálogo
+            if ( entrada != null ) {
+                try {
+                    abb.put( Integer.parseInt( entrada.trim() ) );
+                } catch ( NumberFormatException ex ) {
+                    JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
+                }
+            }
         }
         
     }
@@ -87,11 +98,11 @@ public class Main extends EngineFrame {
         switch ( telaAtual ) {
             case TELA_ABB:
                 abb.desenhar( this );
-                drawText( "Clique: inserir chave | Backspace: menu", 10, 10, BLACK );
+                drawText( "Clique: Inserir Chave | Backspace: menu", 10, 10, BLACK );
                 break;
             case TELA_AVL:
                 avl.desenhar( this );
-                drawText( "Backspace: menu", 10, 10, BLACK );
+                drawText( "Clique: Inserir Chave | Backspace: menu", 10, 10, BLACK );
                 break;
             case TELA_VP:
                 vp.desenhar( this );
@@ -99,8 +110,8 @@ public class Main extends EngineFrame {
                 break;
             default:
                 drawText( "1 - ABB (Arvore de Busca Binaria)", 100, 100, BLACK );
-                drawText( "2 - AVL", 100, 120, BLACK );
-                drawText( "3 - VP (Arvore Vermelha e Preta)", 100, 140, BLACK );
+                drawText( "2 - AVL(Arvore Adelson Velsky & Landis)", 100, 120, BLACK );
+                drawText( "3 - VP (Arvore Vermelha & Preta)", 100, 140, BLACK );
         }
         
     }
