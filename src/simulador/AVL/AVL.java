@@ -78,11 +78,30 @@ public class AVL {
     
       
     private No rotacaoDireita( No y ) {
-        return null;
+        No x = y.getE();
+        No t2 = x.getD();
+        
+        x.setD( y );
+        y.setE( t2 );
+        
+        y.setAltura( 1 + Math.max( altura( y.getE() ), altura( y.getD() ) ) );
+        x.setAltura( 1 + Math.max( altura( x.getE() ), altura( x.getD() ) ) );
+        
+        return x;
+       
     }
     
     private No rotacaoEsquerda( No x ) {
-        return null;
+        No y = x.getD();
+        No t2 = y.getE();
+        
+        y.setE( x );
+        x.setD( t2 );
+        
+        x.setAltura( 1 + Math.max( altura( x.getE() ), altura( x.getD() ) ) );
+        y.setAltura( 1 + Math.max( altura( y.getE() ), altura( y.getD() ) ) );
+        
+        return y;
     }
     
     private int altura( No no ) {
@@ -91,6 +110,19 @@ public class AVL {
     
     private int fatorBalanceamento( No no ) {
         return no == null ? 0 : altura( no.getE() ) - altura( no.getD() );
+    }
+    
+    public void emOrdem() {      
+        emOrdem( raiz );
+        System.out.println();    
+    }
+    
+    private void emOrdem( No no ) {       
+        if ( no != null ) {
+            emOrdem( no.getE() );
+            System.out.println( no );
+            emOrdem( no.getD() );
+        }    
     }
     
     public void atualizarNos( double espHor, double espVert, int margemHor, int margemVert ) {
