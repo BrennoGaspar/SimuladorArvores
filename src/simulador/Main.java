@@ -105,6 +105,41 @@ public class Main extends EngineFrame {
             }
             
         }
+        
+                if( SINCRONIZADO && isMouseButtonPressed(MOUSE_BUTTON_RIGHT) ) {
+            String entrada = JOptionPane.showInputDialog( "Chave para remover" );
+            if( entrada != null ) {
+                try {
+                    int chave = Integer.parseInt( entrada.trim() );
+                    abb.rem( chave );
+                    avl.rem( chave );
+                    vp.rem( chave );
+                } catch( NumberFormatException ex ) {
+                    JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
+                }
+            }
+        } else if( (telaAtual == TELA_ABB || telaAtual == TELA_AVL || telaAtual == TELA_VP) && isMouseButtonPressed(MOUSE_BUTTON_RIGHT) ) {
+            
+            String entrada = JOptionPane.showInputDialog( "Chave para remover" );
+            if( entrada != null ) {
+                try {
+                    switch( telaAtual ) {
+                        case TELA_ABB:
+                            abb.rem( Integer.parseInt( entrada.trim() ) );
+                            break;
+                        case TELA_AVL:
+                            avl.rem( Integer.parseInt( entrada.trim() ) );
+                            break;
+                        case TELA_VP:
+                            vp.rem( Integer.parseInt( entrada.trim() ) );
+                            break;
+                    }
+                } catch( NumberFormatException ex ) {
+                    JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
+                }
+            }
+            
+        }
 
     }
     

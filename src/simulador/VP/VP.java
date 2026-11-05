@@ -55,6 +55,127 @@ public class VP {
         
     }
     
+     public void rem( int c ) {
+        if ( !contem( raiz, c ) ) {
+            return;
+        } 
+        
+        if ( !isRed( raiz.getE() ) && !isRed( raiz.getD() ) ) {
+            raiz.setRed( true );
+        } 
+        raiz = rem( raiz, c );
+        
+        if ( raiz != null ) {
+            raiz.setRed( false );
+        }
+        
+        atualizarNos( ESPHOR, ESPVERT, MARGEMHOR, MARGEMVERT );    
+    }
+    
+    private No rem( No no, int c ) { 
+        if ( c < no.getC() ) {
+            
+            if ( !isRed( no.getE() ) && !isRed( no.getE().getE() ) ) {
+                no = moverVermelhaEsquerda( no );
+            }
+            
+            no.setE( rem( no.getE(), c ) );     
+        } else {
+            
+            if ( isRed( no.getE() ) ) {
+                no = rotacionarDireita( no );
+            }
+            
+            if ( c == no.getC() && no.getD() == null ) {
+                return null;
+            }
+            
+            if ( !isRed( no.getD() ) && !isRed( no.getD().getE() ) ) {
+                no = moverVermelhaDireita( no );
+            }
+            
+            if ( c == no.getC() ) {
+                
+                No sucessor = min( no.getD() );
+                no.setC( sucessor.getC() );
+                no.setD( remMin( no.getD() ) );    
+            } else {
+                no.setD( rem( no.getD(), c ) );
+            }    
+        }
+        
+        return balancear( no ); 
+    }
+    
+    private No remMin( No no ) {
+ 
+        if ( no.getE() == null ) {
+            return null;
+        }
+        
+        if ( !isRed( no.getE() ) && !isRed( no.getE().getE() ) ) {
+            no = moverVermelhaEsquerda( no );
+        }
+        
+        no.setE( remMin( no.getE() ) );
+        
+        return balancear( no );
+        
+    }
+    
+    private No min( No no ) {
+        
+        while ( no.getE() != null ) {
+            no = no.getE();
+        }
+        
+        return no;
+        
+    }
+    
+    private boolean contem( No no, int c ) {
+        
+        while ( no != null ) {
+            if ( c < no.getC() ) {
+                no = no.getE();
+            } else if ( c > no.getC() ) {
+                no = no.getD();
+            } else {
+                return true;
+            }
+        }
+        
+        return false;
+        
+    }
+    
+    private No moverVermelhaEsquerda( No no ) {
+        
+        inverterCores( no );
+        
+        if ( isRed( no.getD().getE() ) ) {
+            no.setD( rotacionarDireita( no.getD() ) );
+            no = rotacionarEsquerda( no );
+            inverterCores( no );
+        }
+        
+        return no;
+        
+    }
+    
+    private No moverVermelhaDireita( No no ) {
+        
+        inverterCores( no );
+        
+        if ( isRed( no.getE().getE() ) ) {
+            no = rotacionarDireita( no );
+            inverterCores( no );
+        }
+        
+        return no;
+        
+    }
+    
     private No balancear( No no ) {
         
         if( isRed(no.getD()) && !isRed(no.getE()) ) {

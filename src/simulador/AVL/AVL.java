@@ -76,6 +76,73 @@ public class AVL {
         
     }
     
+        public void rem( int c ) {
+        
+        raiz = rem( raiz, c );
+        atualizarNos( ESPHOR, ESPVERT, MARGEMHOR, MARGEMVERT );
+        
+    }
+    
+    private No rem( No no, int c ) { 
+        if ( no == null ) {
+            return null;
+        }
+        
+        if ( c < no.getC() ) {
+            no.setE( rem( no.getE(), c ) );
+        } else if ( c > no.getC() ) {
+            no.setD( rem( no.getD(), c ) );
+        } else {
+            
+            if ( no.getE() == null ) {
+                return no.getD();
+            }
+            
+            if ( no.getD() == null ) {
+                return no.getE();
+            }
+            
+            No sucessor = min( no.getD() );
+            no.setC( sucessor.getC() );
+            no.setD( rem( no.getD(), sucessor.getC() ) );      
+        }
+        
+        no.setAltura( 1 + Math.max( altura( no.getE() ), altura( no.getD() ) ) );
+        
+        // cálculo do balanceamento para o rem
+        int fb = fatorBalanceamento( no );
+        
+        // left-left
+        if ( fb > 1 && fatorBalanceamento( no.getE() ) >= 0 ) {
+            return rotacaoDireita( no );
+        }
+        
+        // left-right
+        if ( fb > 1 && fatorBalanceamento( no.getE() ) < 0 ) {
+            no.setE( rotacaoEsquerda( no.getE() ) );
+            return rotacaoDireita( no );
+        }
+        
+        // right-right
+        if ( fb < -1 && fatorBalanceamento( no.getD() ) <= 0 ) {
+            return rotacaoEsquerda( no );
+        }
+        
+        // right-left
+        if ( fb < -1 && fatorBalanceamento( no.getD() ) > 0 ) {
+            no.setD( rotacaoDireita( no.getD() ) );
+            return rotacaoEsquerda( no );
+        }
+        
+        return no;   
+    }
+    
+    private No min( No no ) {   
+        while ( no.getE() != null ) {
+            no = no.getE();
+        }  
+        return no;   
+    }
       
     private No rotacaoDireita( No y ) {
         No x = y.getE();

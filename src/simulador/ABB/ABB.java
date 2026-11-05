@@ -49,6 +49,50 @@ public class ABB {
         
     }
     
+      public void rem( int c ) {
+        
+        raiz = rem( raiz, c );
+        atualizarNos( ESPHOR, ESPVERT, MARGEMHOR, MARGEMVERT );
+        
+    }
+    
+    private No rem( No no, int c ) {
+        
+        if ( no == null ) {
+            return null;
+        }
+        
+        if ( c < no.getC() ) {
+            no.setE( rem( no.getE(), c ) );
+        } else if ( c > no.getC() ) {
+            no.setD( rem( no.getD(), c ) );
+        } else {
+            
+            if ( no.getE() == null ) {
+                return no.getD();
+            }
+            
+            if ( no.getD() == null ) {
+                return no.getE();
+            }
+            
+            // dois filhos - substitui pelo próx
+            No sucessor = min( no.getD() );
+            no.setC( sucessor.getC() );
+            no.setD( rem( no.getD(), sucessor.getC() ) );         
+        }
+        return no;   
+    }
+    
+    private No min( No no ) {
+        
+        while ( no.getE() != null ) {
+            no = no.getE();
+        }
+      
+        return no;     
+    }
+    
     public void atualizarNos( double espHor, double espVert, int margemHor, int margemVert ) {
         
         ranqueAtual = 0;
