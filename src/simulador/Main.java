@@ -53,7 +53,9 @@ public class Main extends EngineFrame {
     @Override
     public void update( double delta ) {
         
-        // escolha da tela (a mudança de tela é só um estado, o desenho fica no draw)
+        /**
+         * Sistema para exibição da árvore (telas)
+         */
         if( isKeyPressed(KEY_FOUR) ) {
             SINCRONIZADO = true;
             telaAtual = TELA_ABB;
@@ -72,6 +74,9 @@ public class Main extends EngineFrame {
             limparArvores();
         }
         
+        /**
+         * Sistema para adicionar os nós
+         */
         if( SINCRONIZADO && isMouseButtonPressed(MOUSE_BUTTON_LEFT) ) {
             String entrada = JOptionPane.showInputDialog( "Chave" );
             if( entrada != null ) {
@@ -106,39 +111,44 @@ public class Main extends EngineFrame {
             
         }
         
-                if( SINCRONIZADO && isMouseButtonPressed(MOUSE_BUTTON_RIGHT) ) {
-            String entrada = JOptionPane.showInputDialog( "Chave para remover" );
-            if( entrada != null ) {
-                try {
-                    int chave = Integer.parseInt( entrada.trim() );
+        /**
+         * Sistema para remover os nós
+         */
+        if( isMouseButtonPressed(MOUSE_BUTTON_RIGHT) ) {
+
+            Integer chave = null;
+            switch( telaAtual ) {
+                case TELA_ABB:
+                    chave = abb.chaveEm( getMouseX(), getMouseY() );
+                    break;
+                case TELA_AVL:
+                    chave = avl.chaveEm( getMouseX(), getMouseY() );
+                    break;
+                case TELA_VP:
+                    chave = vp.chaveEm( getMouseX(), getMouseY() );
+                    break;
+            }
+
+            if( chave != null ) {
+                if( SINCRONIZADO ) {
                     abb.rem( chave );
                     avl.rem( chave );
                     vp.rem( chave );
-                } catch( NumberFormatException ex ) {
-                    JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
-                }
-            }
-        } else if( (telaAtual == TELA_ABB || telaAtual == TELA_AVL || telaAtual == TELA_VP) && isMouseButtonPressed(MOUSE_BUTTON_RIGHT) ) {
-            
-            String entrada = JOptionPane.showInputDialog( "Chave para remover" );
-            if( entrada != null ) {
-                try {
+                } else {
                     switch( telaAtual ) {
                         case TELA_ABB:
-                            abb.rem( Integer.parseInt( entrada.trim() ) );
+                            abb.rem( chave );
                             break;
                         case TELA_AVL:
-                            avl.rem( Integer.parseInt( entrada.trim() ) );
+                            avl.rem( chave );
                             break;
                         case TELA_VP:
-                            vp.rem( Integer.parseInt( entrada.trim() ) );
+                            vp.rem( chave );
                             break;
                     }
-                } catch( NumberFormatException ex ) {
-                    JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
                 }
             }
-            
+
         }
 
     }
@@ -153,20 +163,20 @@ public class Main extends EngineFrame {
             case TELA_ABB:
                 abb.desenhar( this );
                 drawText( "Arvore Binaria de Busca", 10, 10, BLACK );
-                drawText( "Clique: Inserir Chave | Backspace: menu", 10, 30, BLACK );
-                drawText( "SINCRONIZADO", 600, 20, cor );
+                drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave\nBackspace: menu", 10, 30, BLACK );
+                drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             case TELA_AVL:
                 avl.desenhar( this );
                 drawText( "Arvore AVL", 10, 10, BLACK );
-                drawText( "Clique: Inserir Chave | Backspace: menu", 10, 30, BLACK );
-                drawText( "SINCRONIZADO", 600, 20, cor );
+                drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave\nBackspace: menu", 10, 30, BLACK );
+                drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             case TELA_VP:
                 vp.desenhar( this );
                 drawText( "Arvore Vermelha e Preta", 10, 10, BLACK );
-                drawText( "Clique: Inserir Chave | Backspace: menu", 10, 30, BLACK );
-                drawText( "SINCRONIZADO", 600, 20, cor );
+                drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave\nBackspace: menu", 10, 30, BLACK );
+                drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             default:
                 drawText( "1 - ABB (Arvore de Busca Binaria)", 100, 100, BLACK );

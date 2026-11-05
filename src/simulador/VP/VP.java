@@ -15,7 +15,7 @@ public class VP {
     private final double ESPHOR = 50;
     private final double ESPVERT = 50;
     private final int MARGEMHOR = 50;
-    private final int MARGEMVERT = 70;
+    private final int MARGEMVERT = 100;
     
     private No raiz;
     private int ranqueAtual;
@@ -225,6 +225,20 @@ public class VP {
         no.getE().changeRed();
         no.getD().changeRed();
         
+    }
+    
+    public Integer chaveEm( int mouseX, int mouseY ) {
+    
+        for ( No no : nosDesenho ) {
+            double dx = mouseX - no.getPos().x;
+            double dy = mouseY - no.getPos().y;
+            if ( dx * dx + dy * dy <= no.getRaio() * no.getRaio() ) {
+                return no.getC();
+            }
+        }
+
+        return null;
+
     }
     
     public void atualizarNos( double espHor, double espVert, int margemHor, int margemVert ) {

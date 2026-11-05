@@ -19,7 +19,7 @@ public class AVL {
     private final double ESPHOR = 50;
     private final double ESPVERT = 50;
     private final int MARGEMHOR = 50;
-    private final int MARGEMVERT = 70;
+    private final int MARGEMVERT = 100;
     
     public void put( int c ) {
         
@@ -179,17 +179,18 @@ public class AVL {
         return no == null ? 0 : altura( no.getE() ) - altura( no.getD() );
     }
     
-    public void emOrdem() {      
-        emOrdem( raiz );
-        System.out.println();    
-    }
+    public Integer chaveEm( int mouseX, int mouseY ) {
     
-    private void emOrdem( No no ) {       
-        if ( no != null ) {
-            emOrdem( no.getE() );
-            System.out.println( no );
-            emOrdem( no.getD() );
-        }    
+        for ( No no : nosDesenho ) {
+            double dx = mouseX - no.getPos().x;
+            double dy = mouseY - no.getPos().y;
+            if ( dx * dx + dy * dy <= no.getRaio() * no.getRaio() ) {
+                return no.getC();
+            }
+        }
+
+        return null;
+
     }
     
     public void atualizarNos( double espHor, double espVert, int margemHor, int margemVert ) {
