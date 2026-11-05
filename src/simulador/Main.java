@@ -25,9 +25,12 @@ public class Main extends EngineFrame {
     private VP vp;
     
     private int telaAtual;
+    private int ranqueAtualABB;
+    private int ranqueAtualAVL;
+    private int ranqueAtualVP;
         
     public Main() {
-        super( 800, 450, "Simulador Árvores", 60, true );
+        super( 1000, 700, "Simulador Árvores", 60, true );
     }
     
     private void limparArvores() {
@@ -150,6 +153,10 @@ public class Main extends EngineFrame {
             }
 
         }
+        
+        ranqueAtualABB = abb.getNivelAtual();
+        ranqueAtualAVL = avl.getNivelAtual();
+        ranqueAtualVP = vp.getNivelAtual();
 
     }
     
@@ -162,19 +169,22 @@ public class Main extends EngineFrame {
         switch( telaAtual ) {
             case TELA_ABB:
                 abb.desenhar( this );
-                drawText( "Arvore Binaria de Busca", 10, 10, BLACK );
+                String textoABB = String.format( "Arvore ABB - Ranque atual: %d", ranqueAtualABB );
+                drawText( textoABB, 10, 10, BLACK );
                 drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave\nBackspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             case TELA_AVL:
                 avl.desenhar( this );
-                drawText( "Arvore AVL", 10, 10, BLACK );
+                String textoAVL = String.format( "Arvore AVL - Ranque atual: %d", ranqueAtualAVL );
+                drawText( textoAVL, 10, 10, BLACK );
                 drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave\nBackspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             case TELA_VP:
                 vp.desenhar( this );
-                drawText( "Arvore Vermelha e Preta", 10, 10, BLACK );
+                String textoVP = String.format( "Arvore VP - Ranque atual: %d", ranqueAtualVP );
+                drawText( textoVP, 10, 10, BLACK );
                 drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave\nBackspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;

@@ -16,6 +16,7 @@ public class VP {
     private final double ESPVERT = 50;
     private final int MARGEMHOR = 50;
     private final int MARGEMVERT = 100;
+    private final int LARGURA = 1000;
     
     private No raiz;
     private int ranqueAtual;
@@ -242,11 +243,17 @@ public class VP {
     }
     
     public void atualizarNos( double espHor, double espVert, int margemHor, int margemVert ) {
-        
+    
         ranqueAtual = 0;
         nosDesenho.clear();
         atualizarNos( raiz, 0, espHor, espVert, margemHor, margemVert );
-        
+
+        double deslocamento = ( LARGURA - espHor * (nosDesenho.size() - 1) ) / 2 - margemHor;
+
+        for ( No no : nosDesenho ) {
+            no.setPos( new Vector2(no.getPos().x + deslocamento, no.getPos().y) );
+        }
+
     }
     
     private void atualizarNos( No no, int nivel, double espHor, double espVert, int margemHor, int margemVert ) {
@@ -265,7 +272,22 @@ public class VP {
     }
     
     public void clear() {
+        raiz = null;
         nosDesenho.clear();
+    }
+    
+    public int getNivelAtual() {
+        
+        int maior = 0;
+        for( No no : nosDesenho ) {
+            int valor = no.getNivel();
+            if( valor > maior ) {
+                maior = valor;
+            }
+        }
+        
+        return maior;
+        
     }
     
     public void desenhar( EngineFrame e ) {
