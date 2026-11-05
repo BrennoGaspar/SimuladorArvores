@@ -19,7 +19,7 @@ public class AVL {
     private final double ESPHOR = 50;
     private final double ESPVERT = 50;
     private final int MARGEMHOR = 50;
-    private final int MARGEMVERT = 50;
+    private final int MARGEMVERT = 70;
     
     public void put( int c ) {
         
@@ -146,6 +146,10 @@ public class AVL {
             atualizarNos( no.getD(), nivel + 1, espHor, espVert, margemHor, margemVert );
         }
         
+    }
+    
+    public void clear() {
+        nosDesenho.clear();
     }
     
     public void desenhar( EngineFrame e ) {

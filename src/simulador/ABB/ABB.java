@@ -15,7 +15,7 @@ public class ABB {
     private final double ESPHOR = 50;
     private final double ESPVERT = 50;
     private final int MARGEMHOR = 50;
-    private final int MARGEMVERT = 50;
+    private final int MARGEMVERT = 70;
     
     private No raiz;
     private int ranqueAtual;
@@ -70,6 +70,10 @@ public class ABB {
             atualizarNos( no.getD(), nivel + 1, espHor, espVert, margemHor, margemVert );
         }
         
+    }
+    
+    public void clear() {
+        nosDesenho.clear();
     }
     
     public void desenhar( EngineFrame e ) {
