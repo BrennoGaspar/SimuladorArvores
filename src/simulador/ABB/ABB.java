@@ -4,6 +4,7 @@ import br.com.davidbuzatto.jsge.core.engine.EngineFrame;
 import br.com.davidbuzatto.jsge.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import simulador.No;
 
 /**
@@ -17,6 +18,7 @@ public class ABB {
     private final int MARGEMHOR = 50;
     private final int MARGEMVERT = 100;
     private final int LARGURA = 1000;
+    private final int LIMITE_RANDOM = 5;
     
     private No raiz;
     private int ranqueAtual;
@@ -136,6 +138,32 @@ public class ABB {
             atualizarNos( no.getD(), nivel + 1, espHor, espVert, margemHor, margemVert );
         }
         
+    }
+    
+    public int[] random() {
+        
+        int[] valoresGerados = new int[LIMITE_RANDOM];
+        Random random = new Random();
+        for( int i = 0; i < LIMITE_RANDOM; i++ ) {
+            
+            while ( true ) {
+                int valor = random.nextInt( 100 );
+                boolean jaTem = false;
+                for( No no : nosDesenho ) {
+                    if( valor == no.getC() ) {
+                        jaTem = true;
+                    }
+                }
+                if( !jaTem ) {
+                    put( valor );
+                    valoresGerados[i] = valor;
+                    break;
+                }
+            }
+            
+        }
+        
+        return valoresGerados;
     }
     
     public void find( int x ) {

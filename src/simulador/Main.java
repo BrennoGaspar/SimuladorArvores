@@ -70,6 +70,7 @@ public class Main extends EngineFrame {
             telaAtual = TELA_VP;
         } else if( isKeyPressed( KEY_BACKSPACE ) ) {
             if( SINCRONIZADO ) {
+                SINCRONIZADO = false;
                 telaAtual = TELA_MENU;
                 limparArvores();
             }
@@ -138,8 +139,18 @@ public class Main extends EngineFrame {
                     vp.rem( chave );
                 }
             }
+            /**
+             * Sistema para gerar nós aleatórios
+             */
+            else if ( isKeyPressed(KEY_R) ) {
+                int[] valoresGerados = abb.random();
+                for( int i : valoresGerados ) {
+                    avl.put( i );
+                    vp.put( i );
+                }
+            }
             
-        } else {
+        } else if ( telaAtual != TELA_MENU ) {
             /**
              * Sistema para inserir nós
              */
@@ -205,6 +216,22 @@ public class Main extends EngineFrame {
                     }
                 }
             }
+            /**
+             * Sistema para gerar nós aleatórios
+             */
+            else if ( isKeyPressed(KEY_R) ) {
+                switch( telaAtual ) {
+                        case TELA_ABB:
+                            abb.random();
+                            break;
+                        case TELA_AVL:
+                            avl.random();
+                            break;
+                        case TELA_VP:
+                            vp.random();
+                            break;
+                    }
+            }
             
         }
         
@@ -225,21 +252,21 @@ public class Main extends EngineFrame {
                 abb.desenhar( this );
                 String textoABB = String.format( "Arvore ABB - Ranque atual: %d", ranqueAtualABB );
                 drawText( textoABB, 10, 10, BLACK );
-                drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave | F: Buscar Valor\nBackspace: menu", 10, 30, BLACK );
+                drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave\nF: Buscar Valor | R: Gerar valores | Backspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             case TELA_AVL:
                 avl.desenhar( this );
                 String textoAVL = String.format( "Arvore AVL - Ranque atual: %d", ranqueAtualAVL );
                 drawText( textoAVL, 10, 10, BLACK );
-                drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave | F: Buscar Valor\nBackspace: menu", 10, 30, BLACK );
+                drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave\nF: Buscar Valor | R: Gerar valores | Backspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             case TELA_VP:
                 vp.desenhar( this );
                 String textoVP = String.format( "Arvore VP - Ranque atual: %d", ranqueAtualVP );
                 drawText( textoVP, 10, 10, BLACK );
-                drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave | F: Buscar Valor\nBackspace: menu", 10, 30, BLACK );
+                drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave\nF: Buscar Valor | R: Gerar valores | Backspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             default:
