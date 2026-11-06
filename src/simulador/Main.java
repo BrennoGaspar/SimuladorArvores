@@ -78,48 +78,11 @@ public class Main extends EngineFrame {
         }
         
         /**
-         * Sistema para adicionar os nós
+         * Otimização de código para o método de remover nó através da colisão com o mouse
          */
-        if( SINCRONIZADO && isMouseButtonPressed(MOUSE_BUTTON_LEFT) ) {
-            String entrada = JOptionPane.showInputDialog( "Chave" );
-            if( entrada != null ) {
-                try {
-                    abb.put( Integer.parseInt(entrada) );
-                    avl.put( Integer.parseInt(entrada) );
-                    vp.put( Integer.parseInt(entrada) );
-                } catch( NumberFormatException ex ) {
-                    JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
-                }
-            }
-        } else if( (telaAtual == TELA_ABB || telaAtual == TELA_AVL || telaAtual == TELA_VP) && isMouseButtonPressed(MOUSE_BUTTON_LEFT) ) {
-            
-            String entrada = JOptionPane.showInputDialog( "Chave" );
-            if( entrada != null ) {
-                try {
-                    switch( telaAtual ) {
-                        case TELA_ABB:
-                            abb.put( Integer.parseInt( entrada.trim() ) );
-                            break;
-                        case TELA_AVL:
-                            avl.put( Integer.parseInt( entrada.trim() ) );
-                            break;
-                        case TELA_VP:
-                            vp.put( Integer.parseInt( entrada.trim() ) );
-                            break;
-                    }
-                } catch( NumberFormatException ex ) {
-                    JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
-                }
-            }
-            
-        }
-        
-        /**
-         * Sistema para remover os nós
-         */
-        if( isMouseButtonPressed(MOUSE_BUTTON_RIGHT) ) {
-
-            Integer chave = null;
+        Integer chave = null;
+        if ( isMouseButtonPressed(MOUSE_BUTTON_RIGHT) ) {
+            chave = null;
             switch( telaAtual ) {
                 case TELA_ABB:
                     chave = abb.chaveEm( getMouseX(), getMouseY() );
@@ -131,13 +94,104 @@ public class Main extends EngineFrame {
                     chave = vp.chaveEm( getMouseX(), getMouseY() );
                     break;
             }
-
-            if( chave != null ) {
-                if( SINCRONIZADO ) {
+        }
+        
+        if( SINCRONIZADO ) {
+            /**
+             * Sistema para inserir nós
+             */
+            if( isMouseButtonPressed(MOUSE_BUTTON_LEFT) || isKeyPressed(KEY_I) ) {
+                String entrada = JOptionPane.showInputDialog( "Chave" );
+                if( entrada != null ) {
+                    try {
+                        abb.put( Integer.parseInt(entrada) );
+                        avl.put( Integer.parseInt(entrada) );
+                        vp.put( Integer.parseInt(entrada) );
+                    } catch( NumberFormatException ex ) {
+                        JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
+                    }
+                }
+            }
+            /**
+             * Sistema para buscar nós
+             */
+            else if ( isKeyPressed(KEY_F) ) {
+                String entrada = JOptionPane.showInputDialog( "Valor a ser encontrado" );
+                if( entrada != null ) {
+                    try{
+                        int x = Integer.parseInt( entrada );
+                        abb.find( x );
+                        avl.find( x );
+                        vp.find( x );
+                    } catch( NumberFormatException ex ) {
+                        JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
+                    }
+                }
+            }
+            /**
+             * Sistema para remover nós
+             */
+            else if ( isMouseButtonPressed(MOUSE_BUTTON_RIGHT) ) {
+                if( chave != null ) {
                     abb.rem( chave );
                     avl.rem( chave );
                     vp.rem( chave );
-                } else {
+                }
+            }
+            
+        } else {
+            /**
+             * Sistema para inserir nós
+             */
+            if( isMouseButtonPressed(MOUSE_BUTTON_LEFT) || isKeyPressed(KEY_I) ) {
+                String entrada = JOptionPane.showInputDialog( "Chave" );
+                if( entrada != null ) {
+                    try {
+                        switch( telaAtual ) {
+                            case TELA_ABB:
+                                abb.put( Integer.parseInt( entrada.trim() ) );
+                                break;
+                            case TELA_AVL:
+                                avl.put( Integer.parseInt( entrada.trim() ) );
+                                break;
+                            case TELA_VP:
+                                vp.put( Integer.parseInt( entrada.trim() ) );
+                                break;
+                        }
+                    } catch( NumberFormatException ex ) {
+                        JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
+                    }
+                }
+            } 
+            /**
+             * Sistema para buscar nós
+             */
+            else if ( isKeyPressed(KEY_F) ) {
+                String entrada = JOptionPane.showInputDialog( "Valor a ser encontrado" );
+                if( entrada != null ) {
+                    try{
+                        int x = Integer.parseInt( entrada );
+                        switch( telaAtual ) {
+                            case TELA_ABB:
+                                abb.find( x );
+                                break;
+                            case TELA_AVL:
+                                avl.find( x );
+                                break;
+                            case TELA_VP:
+                                vp.find( x );
+                                break;
+                        }
+                    } catch( NumberFormatException ex ) {
+                        JOptionPane.showMessageDialog( null, "Digite um número inteiro válido." );
+                    }
+                }
+            }
+            /**
+             * Sistema para remover nós
+             */
+            else if ( isMouseButtonPressed(MOUSE_BUTTON_RIGHT) ) {
+                if( chave != null ) {
                     switch( telaAtual ) {
                         case TELA_ABB:
                             abb.rem( chave );
@@ -151,7 +205,7 @@ public class Main extends EngineFrame {
                     }
                 }
             }
-
+            
         }
         
         ranqueAtualABB = abb.getNivelAtual();
@@ -171,21 +225,21 @@ public class Main extends EngineFrame {
                 abb.desenhar( this );
                 String textoABB = String.format( "Arvore ABB - Ranque atual: %d", ranqueAtualABB );
                 drawText( textoABB, 10, 10, BLACK );
-                drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave\nBackspace: menu", 10, 30, BLACK );
+                drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave | F: Buscar Valor\nBackspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             case TELA_AVL:
                 avl.desenhar( this );
                 String textoAVL = String.format( "Arvore AVL - Ranque atual: %d", ranqueAtualAVL );
                 drawText( textoAVL, 10, 10, BLACK );
-                drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave\nBackspace: menu", 10, 30, BLACK );
+                drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave | F: Buscar Valor\nBackspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             case TELA_VP:
                 vp.desenhar( this );
                 String textoVP = String.format( "Arvore VP - Ranque atual: %d", ranqueAtualVP );
                 drawText( textoVP, 10, 10, BLACK );
-                drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave\nBackspace: menu", 10, 30, BLACK );
+                drawText( "Clique: Inserir Chave | Clique Direito: Remover Chave | F: Buscar Valor\nBackspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             default:

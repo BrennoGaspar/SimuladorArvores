@@ -138,6 +138,24 @@ public class ABB {
         
     }
     
+    public void find( int x ) {
+        
+        boolean encontrou = false;
+        for( No no : nosDesenho ) {
+            if( no.getC() == x ) {
+                no.setFind( true );
+                encontrou = true;
+            } else {
+                no.setFind( false );
+            }
+        }
+        
+        if( !encontrou ) {
+            System.out.printf( "\nO valor %d nao foi encotrado na arvore\n", x );
+        }
+        
+    }
+    
     public void clear() {
         raiz = null;
         nosDesenho.clear();

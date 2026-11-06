@@ -14,6 +14,7 @@ public class No {
     private No d;
     private boolean red;
     private Color fonte;
+    private boolean find;
     
     private Vector2 pos;
     private int nivel;
@@ -28,7 +29,11 @@ public class No {
 
     public void desenhar( EngineFrame engine ) {
         
-        if( red ) {
+        if( find ) {
+            engine.fillCircle( pos, raio, EngineFrame.YELLOW );
+            engine.drawCircle( pos, raio, EngineFrame.BLACK );
+            fonte = Color.BLACK;
+        } else if ( red ) {
             engine.fillCircle( pos, raio, EngineFrame.RED );
             engine.drawCircle( pos, raio, EngineFrame.BLACK );
             fonte = Color.WHITE;
@@ -115,8 +120,12 @@ public class No {
         this.red = !this.red;
     }
     
-    public void setRed( boolean red ) {
+    public void setRed(boolean red) {
         this.red = red;
+    }
+
+    public void setFind(boolean find) {
+        this.find = find;
     }
     
     private int altura = 1;
