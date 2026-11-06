@@ -20,11 +20,14 @@ public class No {
     private int nivel;
     private int ranque;
     private int raio;
+    private boolean avl;
+    private int fatorBalanceamento;
     
-    public No( int raio, boolean red ) {
+    public No( int raio, boolean red, boolean avl ) {
         this.pos = new Vector2();
         this.raio = raio;
         this.red = red;
+        this.avl = avl;
     }
 
     public void desenhar( EngineFrame engine ) {
@@ -46,6 +49,12 @@ public class No {
         String label = String.valueOf( c );
         int larg = engine.measureText( label );
         engine.drawText( label, pos.x - larg / 2, pos.y - 10, fonte );
+        
+        String textoFatorBalanceamento = fatorBalanceamento > 0 ? String.format( "+%d", fatorBalanceamento ) : String.format( "%d", fatorBalanceamento );
+        int largFator = engine.measureText( textoFatorBalanceamento );
+        if( avl ) {
+            engine.drawText( textoFatorBalanceamento, pos.x - largFator / 2, pos.y - 35, fonte );
+        }
                 
     }
     
@@ -126,6 +135,10 @@ public class No {
 
     public void setFind(boolean find) {
         this.find = find;
+    }
+
+    public void setFatorBalanceamento(int fatorBalanceamento) {
+        this.fatorBalanceamento = fatorBalanceamento;
     }
     
     private int altura = 1;

@@ -41,7 +41,7 @@ public class VP {
         
         if ( no == null ) {
             
-            no = new No( RAIO, true );
+            no = new No( RAIO, true, false );
             no.setC( c );
             return no;
             

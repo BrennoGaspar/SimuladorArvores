@@ -34,7 +34,7 @@ public class ABB {
     private No put( No no, int c ) {
         
         if ( no == null ) {
-            no = new No( RAIO, false );
+            no = new No( RAIO, false, false );
             no.setC( c );
         } else {
             

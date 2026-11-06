@@ -34,7 +34,7 @@ public class AVL {
     private No put( No no, int c ) {
         
         if ( no == null ) {
-            no = new No( RAIO, false );
+            no = new No( RAIO, false, true );
             no.setC( c );
             no.setAltura( 1 );
             return no;
@@ -225,6 +225,20 @@ public class AVL {
         
     }
     
+    public void fatorDeBalanceamento( No no ) {
+        
+        if ( no == null ) {
+            return;
+        }
+
+        int alturaEsquerda = altura( no.getE() );
+        int alturaDireita = altura( no.getD() );
+
+        int fator = alturaEsquerda - alturaDireita;
+        no.setFatorBalanceamento( fator );
+        
+    }
+    
     public int[] random() {
         
         int[] valoresGerados = new int[LIMITE_RANDOM];
@@ -300,6 +314,7 @@ public class AVL {
         }
         
         for ( No no : nosDesenho ) {
+            fatorDeBalanceamento( no );
             no.desenhar( e );
         }
         
