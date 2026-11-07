@@ -113,6 +113,42 @@ public class Main extends EngineFrame {
         }
         
         /**
+         * Sistema para exibição dos Percursos (em ordem, pré-ordem, pós-ordem)
+         */
+        int tipoPercurso = 0;
+        if ( isKeyPressed( KEY_O ) ) {
+            tipoPercurso = 1;
+        } else if ( isKeyPressed( KEY_P ) ) {
+            tipoPercurso = 2;
+        } else if ( isKeyPressed( KEY_S ) ) {
+            tipoPercurso = 3;
+        }
+
+        if ( tipoPercurso != 0 ) {
+            if ( SINCRONIZADO ) {
+                abb.iniciarPercurso( tipoPercurso );
+                avl.iniciarPercurso( tipoPercurso );
+                vp.iniciarPercurso( tipoPercurso );
+            } else {
+                switch( telaAtual ) {
+                    case TELA_ABB:
+                        abb.iniciarPercurso( tipoPercurso );
+                        break;
+                    case TELA_AVL:
+                        avl.iniciarPercurso( tipoPercurso );
+                        break;
+                    case TELA_VP:
+                        vp.iniciarPercurso( tipoPercurso );
+                        break;
+                }
+            }
+        }
+
+        abb.atualizarPercurso( delta );
+        avl.atualizarPercurso( delta );
+        vp.atualizarPercurso( delta );
+        
+        /**
          * Otimização de código para o método de remover nó através da colisão com o mouse
          */
         Integer chave = null;
@@ -293,7 +329,7 @@ public class Main extends EngineFrame {
                 endMode2D();
                 String textoABB = String.format( "Arvore ABB - Ranque atual: %d", ranqueAtualABB );
                 drawText( textoABB, 10, 10, BLACK );
-                drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave\nF: Buscar Valor | R: Gerar valores | Backspace: menu", 10, 30, BLACK );
+                drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave\nF: Buscar | R: Gerar | O/P/S: Percursos | Backspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             case TELA_AVL:
@@ -302,7 +338,7 @@ public class Main extends EngineFrame {
                 endMode2D();
                 String textoAVL = String.format( "Arvore AVL - Ranque atual: %d", ranqueAtualAVL );
                 drawText( textoAVL, 10, 10, BLACK );
-                drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave\nF: Buscar Valor | R: Gerar valores | Backspace: menu", 10, 30, BLACK );
+                drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave\nF: Buscar | R: Gerar | O/P/S: Percursos | Backspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             case TELA_VP:
@@ -311,7 +347,7 @@ public class Main extends EngineFrame {
                 endMode2D();
                 String textoVP = String.format( "Arvore VP - Ranque atual: %d", ranqueAtualVP );
                 drawText( textoVP, 10, 10, BLACK );
-                drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave\nF: Buscar Valor | R: Gerar valores | Backspace: menu", 10, 30, BLACK );
+                drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave\nF: Buscar | R: Gerar | O/P/S: Percursos | Backspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             default:

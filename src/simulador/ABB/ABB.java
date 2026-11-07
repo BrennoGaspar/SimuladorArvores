@@ -24,6 +24,11 @@ public class ABB {
     private int ranqueAtual;
     private final List<No> nosDesenho = new ArrayList<>();
     
+    private final List<No> percurso = new ArrayList<>();
+    private int indicePercurso;
+    private double tempoPercurso;
+    private boolean percorrendo;
+    
     public void put( int c ) {
         
         raiz = put( raiz, c );
@@ -113,6 +118,7 @@ public class ABB {
     
     public void atualizarNos( double espHor, double espVert, int margemHor, int margemVert ) {
     
+        pararPercurso();
         ranqueAtual = 0;
         nosDesenho.clear();
         atualizarNos( raiz, 0, espHor, espVert, margemHor, margemVert );
@@ -184,9 +190,93 @@ public class ABB {
         
     }
     
+    public void iniciarPercurso( int tipo ) {
+    
+        pararPercurso();
+        percurso.clear();
+
+        if ( tipo == 1 ) {
+            coletarEmOrdem( raiz );
+        } else if ( tipo == 2 ) {
+            coletarPreOrdem( raiz );
+        } else {
+            coletarPosOrdem( raiz );
+        }
+
+        for ( No no : nosDesenho ) {
+            no.setFind( false );
+        }
+
+        indicePercurso = 0;
+        tempoPercurso = 0;
+        percorrendo = !percurso.isEmpty();
+
+        if ( percorrendo ) {
+            percurso.get( 0 ).setFind( true );
+        }
+
+    }
+
+    public void atualizarPercurso( double delta ) {
+
+        if ( !percorrendo ) {
+            return;
+        }
+
+        tempoPercurso += delta;
+
+        if ( tempoPercurso >= 0.5 ) {
+            tempoPercurso = 0;
+            percurso.get( indicePercurso ).setFind( false );
+            indicePercurso++;
+            if ( indicePercurso < percurso.size() ) {
+                percurso.get( indicePercurso ).setFind( true );
+            } else {
+                percorrendo = false;
+            }
+        }
+
+    }
+
+    private void pararPercurso() {
+
+        if ( percorrendo ) {
+            for ( No no : nosDesenho ) {
+                no.setFind( false );
+            }
+            percorrendo = false;
+        }
+
+    }
+
+    private void coletarEmOrdem( No no ) {
+        if ( no != null ) {
+            coletarEmOrdem( no.getE() );
+            percurso.add( no );
+            coletarEmOrdem( no.getD() );
+        }
+    }
+
+    private void coletarPreOrdem( No no ) {
+        if ( no != null ) {
+            percurso.add( no );
+            coletarPreOrdem( no.getE() );
+            coletarPreOrdem( no.getD() );
+        }
+    }
+
+    private void coletarPosOrdem( No no ) {
+        if ( no != null ) {
+            coletarPosOrdem( no.getE() );
+            coletarPosOrdem( no.getD() );
+            percurso.add( no );
+        }
+    }
+    
     public void clear() {
         raiz = null;
         nosDesenho.clear();
+        percorrendo = false;
     }
 
     public int getNivelAtual() {
