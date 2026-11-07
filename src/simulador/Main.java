@@ -1,7 +1,9 @@
 package simulador;
 
+import br.com.davidbuzatto.jsge.core.Camera2D;
 import simulador.ABB.ABB;
 import br.com.davidbuzatto.jsge.core.engine.EngineFrame;
+import br.com.davidbuzatto.jsge.math.Vector2;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import simulador.AVL.AVL;
@@ -28,6 +30,13 @@ public class Main extends EngineFrame {
     private int ranqueAtualABB;
     private int ranqueAtualAVL;
     private int ranqueAtualVP;
+    
+    private Camera2D camera;
+    private double zoom;
+    private double alvoX;
+    private double alvoY;
+    private int mouseAnteriorX;
+    private int mouseAnteriorY;
         
     public Main() {
         super( 1000, 700, "Simulador Árvores", 60, true );
@@ -49,12 +58,34 @@ public class Main extends EngineFrame {
         
         telaAtual = TELA_MENU;
         
+        camera = new Camera2D( new Vector2( 0, 0 ), new Vector2( 0, 0 ), 0, 1 );
+        zoom = 1;
+        alvoX = 0;
+        alvoY = 0;
+        
         setDefaultFontSize( 20 );
         
     }
     
     @Override
     public void update( double delta ) {
+        
+        if ( isMouseButtonDown( MOUSE_BUTTON_MIDDLE ) ) {
+            alvoX -= ( getMouseX() - mouseAnteriorX ) / zoom;
+            alvoY -= ( getMouseY() - mouseAnteriorY ) / zoom;
+        }
+        mouseAnteriorX = getMouseX();
+        mouseAnteriorY = getMouseY();
+
+        double roda = getMouseWheelMove();
+        if ( roda != 0 ) {
+            double mundoX = alvoX + getMouseX() / zoom;
+            double mundoY = alvoY + getMouseY() / zoom;
+            zoom = zoom * ( roda > 0 ? 1.1 : 0.9 );
+            zoom = Math.max( 0.2, Math.min( 3, zoom ) );
+            alvoX = mundoX - getMouseX() / zoom;
+            alvoY = mundoY - getMouseY() / zoom;
+        }
         
         /**
          * Sistema para exibição da árvore (telas)
@@ -73,6 +104,9 @@ public class Main extends EngineFrame {
                 SINCRONIZADO = false;
                 telaAtual = TELA_MENU;
                 limparArvores();
+                zoom = 1; 
+                alvoX = 0; 
+                alvoY = 0;
             }
             telaAtual = TELA_MENU;
             limparArvores();
@@ -84,15 +118,17 @@ public class Main extends EngineFrame {
         Integer chave = null;
         if ( isMouseButtonPressed(MOUSE_BUTTON_RIGHT) ) {
             chave = null;
+            int mx = (int) ( alvoX + getMouseX() / zoom );
+            int my = (int) ( alvoY + getMouseY() / zoom );
             switch( telaAtual ) {
                 case TELA_ABB:
-                    chave = abb.chaveEm( getMouseX(), getMouseY() );
+                    chave = abb.chaveEm( mx, my );
                     break;
                 case TELA_AVL:
-                    chave = avl.chaveEm( getMouseX(), getMouseY() );
+                    chave = avl.chaveEm( mx, my );
                     break;
                 case TELA_VP:
-                    chave = vp.chaveEm( getMouseX(), getMouseY() );
+                    chave = vp.chaveEm( mx, my );
                     break;
             }
         }
@@ -247,23 +283,32 @@ public class Main extends EngineFrame {
         clearBackground( WHITE );
         Color cor = SINCRONIZADO ? Color.GREEN : Color.RED;
         
+        camera.zoom = zoom;
+        camera.target = new Vector2( alvoX, alvoY );
+        
         switch( telaAtual ) {
             case TELA_ABB:
+                beginMode2D( camera );
                 abb.desenhar( this );
+                endMode2D();
                 String textoABB = String.format( "Arvore ABB - Ranque atual: %d", ranqueAtualABB );
                 drawText( textoABB, 10, 10, BLACK );
                 drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave\nF: Buscar Valor | R: Gerar valores | Backspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             case TELA_AVL:
+                beginMode2D( camera );
                 avl.desenhar( this );
+                endMode2D();
                 String textoAVL = String.format( "Arvore AVL - Ranque atual: %d", ranqueAtualAVL );
                 drawText( textoAVL, 10, 10, BLACK );
                 drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave\nF: Buscar Valor | R: Gerar valores | Backspace: menu", 10, 30, BLACK );
                 drawText( "SINCRONIZADO", 600, 10, cor );
                 break;
             case TELA_VP:
+                beginMode2D( camera );
                 vp.desenhar( this );
+                endMode2D();
                 String textoVP = String.format( "Arvore VP - Ranque atual: %d", ranqueAtualVP );
                 drawText( textoVP, 10, 10, BLACK );
                 drawText( "Clique ou I: Inserir Chave | Clique Direito: Remover Chave\nF: Buscar Valor | R: Gerar valores | Backspace: menu", 10, 30, BLACK );
