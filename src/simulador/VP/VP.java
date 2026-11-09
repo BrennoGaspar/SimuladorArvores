@@ -11,138 +11,139 @@ import simulador.No;
  * @author Brenno Gaspar Pinto & Victor Altran Soares
  */
 public class VP {
-    
+
     private final int RAIO = 20;
     private final double ESPHOR = 50;
     private final double ESPVERT = 50;
     private final int MARGEMHOR = 50;
-    private final int MARGEMVERT = 100;
+    private final int MARGEMVERT = 120;
     private final int LARGURA = 1000;
     private final int LIMITE_RANDOM = 5;
-    
+
     private No raiz;
     private int ranqueAtual;
     private final List<No> nosDesenho = new ArrayList<>();
-    
+
     private final List<No> percurso = new ArrayList<>();
     private int indicePercurso;
     private double tempoPercurso;
     private boolean percorrendo;
-    
+
     private boolean isRed(No no) {
         if (no == null) return false;
         return no.isRed();
     }
-    
+
     public void put( int c ) {
-        
+
         raiz = put( raiz, c );
         raiz.setRed( false );
         atualizarNos( ESPHOR, ESPVERT, MARGEMHOR, MARGEMVERT );
-        
+
     }
-    
+
     private No put( No no, int c ) {
-        
+
         if ( no == null ) {
-            
+
             no = new No( RAIO, true, false );
+            no.setVp( true );
             no.setC( c );
             return no;
-            
+
         }
-            
+
         if ( c < no.getC() ) {
             no.setE( put( no.getE(), c ) );
         } else if ( c > no.getC() ) {
             no.setD( put( no.getD(), c ) );
         }
-            
-        
+
+
         return balancear( no );
-        
+
     }
-    
+
      public void rem( int c ) {
         if ( !contem( raiz, c ) ) {
             return;
-        } 
-        
+        }
+
         if ( !isRed( raiz.getE() ) && !isRed( raiz.getD() ) ) {
             raiz.setRed( true );
-        } 
+        }
         raiz = rem( raiz, c );
-        
+
         if ( raiz != null ) {
             raiz.setRed( false );
         }
-        
-        atualizarNos( ESPHOR, ESPVERT, MARGEMHOR, MARGEMVERT );    
+
+        atualizarNos( ESPHOR, ESPVERT, MARGEMHOR, MARGEMVERT );
     }
-    
-    private No rem( No no, int c ) { 
+
+    private No rem( No no, int c ) {
         if ( c < no.getC() ) {
-            
+
             if ( !isRed( no.getE() ) && !isRed( no.getE().getE() ) ) {
                 no = moverVermelhaEsquerda( no );
             }
-            
-            no.setE( rem( no.getE(), c ) );     
+
+            no.setE( rem( no.getE(), c ) );
         } else {
-            
+
             if ( isRed( no.getE() ) ) {
                 no = rotacionarDireita( no );
             }
-            
+
             if ( c == no.getC() && no.getD() == null ) {
                 return null;
             }
-            
+
             if ( !isRed( no.getD() ) && !isRed( no.getD().getE() ) ) {
                 no = moverVermelhaDireita( no );
             }
-            
+
             if ( c == no.getC() ) {
-                
+
                 No sucessor = min( no.getD() );
                 no.setC( sucessor.getC() );
-                no.setD( remMin( no.getD() ) );    
+                no.setD( remMin( no.getD() ) );
             } else {
                 no.setD( rem( no.getD(), c ) );
-            }    
+            }
         }
-        
-        return balancear( no ); 
+
+        return balancear( no );
     }
-    
+
     private No remMin( No no ) {
- 
+
         if ( no.getE() == null ) {
             return null;
         }
-        
+
         if ( !isRed( no.getE() ) && !isRed( no.getE().getE() ) ) {
             no = moverVermelhaEsquerda( no );
         }
-        
+
         no.setE( remMin( no.getE() ) );
-        
+
         return balancear( no );
-        
+
     }
-    
+
     private No min( No no ) {
-        
+
         while ( no.getE() != null ) {
             no = no.getE();
         }
-        
+
         return no;
-        
+
     }
-    
+
     private boolean contem( No no, int c ) {
-        
+
         while ( no != null ) {
             if ( c < no.getC() ) {
                 no = no.getE();
@@ -152,40 +153,40 @@ public class VP {
                 return true;
             }
         }
-        
+
         return false;
-        
+
     }
-    
+
     private No moverVermelhaEsquerda( No no ) {
-        
+
         inverterCores( no );
-        
+
         if ( isRed( no.getD().getE() ) ) {
             no.setD( rotacionarDireita( no.getD() ) );
             no = rotacionarEsquerda( no );
             inverterCores( no );
         }
-        
+
         return no;
-        
+
     }
-    
+
     private No moverVermelhaDireita( No no ) {
-        
+
         inverterCores( no );
-        
+
         if ( isRed( no.getE().getE() ) ) {
             no = rotacionarDireita( no );
             inverterCores( no );
         }
-        
+
         return no;
-        
+
     }
-    
+
     private No balancear( No no ) {
-        
+
         if( isRed(no.getD()) && !isRed(no.getE()) ) {
             // direita vermelho, mas esquerda não -> precisa rotacionar para a esquerda
             no = rotacionarEsquerda( no );
@@ -198,13 +199,13 @@ public class VP {
             // esquerda é vermelho, mas direita não -> precisa inverter as cores
             inverterCores( no );
         }
-        
+
         return no;
-        
+
     }
-    
+
     private No rotacionarEsquerda( No no ) {
-        
+
         // direita vermelho, mas esquerda não
         No direita = no.getD();
         no.setD( direita.getE() );
@@ -212,11 +213,11 @@ public class VP {
         direita.setRed( no.isRed() );
         no.setRed( true );
         return direita;
-        
+
     }
-    
+
     private No rotacionarDireita( No no ) {
-        
+
         // esquerda e esquerda-esquerda são vermelhos
         No esquerda = no.getE();
         no.setE( esquerda.getD() );
@@ -224,19 +225,19 @@ public class VP {
         esquerda.setRed( no.isRed() );
         no.setRed( true );
         return esquerda;
-        
+
     }
-    
+
     private void inverterCores( No no ) {
-        
+
         no.changeRed();
         no.getE().changeRed();
         no.getD().changeRed();
-        
+
     }
-    
+
     public Integer chaveEm( int mouseX, int mouseY ) {
-    
+
         for ( No no : nosDesenho ) {
             double dx = mouseX - no.getPos().x;
             double dy = mouseY - no.getPos().y;
@@ -248,9 +249,9 @@ public class VP {
         return null;
 
     }
-    
+
     public void atualizarNos( double espHor, double espVert, int margemHor, int margemVert ) {
-    
+
         pararPercurso();
         ranqueAtual = 0;
         nosDesenho.clear();
@@ -259,32 +260,37 @@ public class VP {
         double deslocamento = ( LARGURA - espHor * (nosDesenho.size() - 1) ) / 2 - margemHor;
 
         for ( No no : nosDesenho ) {
-            no.setPos( new Vector2(no.getPos().x + deslocamento, no.getPos().y) );
+            no.setAlvo( new Vector2( margemHor + espHor * no.getRanque() + deslocamento, margemVert + espVert * no.getNivel() ) );
         }
 
     }
-    
+
     private void atualizarNos( No no, int nivel, double espHor, double espVert, int margemHor, int margemVert ) {
-        
+
         if ( no != null ) {
             atualizarNos( no.getE(), nivel + 1, espHor, espVert, margemHor, margemVert );
             no.setNivel( nivel );
             no.setRanque( ranqueAtual++ );
-            double posX = margemHor + espHor * no.getRanque();
-            double posY = margemVert + espVert * no.getNivel();
-            no.setPos( new Vector2( posX, posY ) );
             nosDesenho.add( no );
             atualizarNos( no.getD(), nivel + 1, espHor, espVert, margemHor, margemVert );
         }
-        
+
     }
-    
+
+    public void animar( double delta ) {
+
+        for ( No no : nosDesenho ) {
+            no.animar( delta );
+        }
+
+    }
+
     public int[] random() {
-        
+
         int[] valoresGerados = new int[LIMITE_RANDOM];
         Random random = new Random();
         for( int i = 0; i < LIMITE_RANDOM; i++ ) {
-            
+
             while ( true ) {
                 int valor = random.nextInt( 100 );
                 boolean jaTem = false;
@@ -299,14 +305,14 @@ public class VP {
                     break;
                 }
             }
-            
+
         }
-        
+
         return valoresGerados;
     }
-    
+
     public void find( int x ) {
-        
+
         boolean encontrou = false;
         for( No no : nosDesenho ) {
             if( no.getC() == x ) {
@@ -316,15 +322,15 @@ public class VP {
                 no.setFind( false );
             }
         }
-        
+
         if( !encontrou ) {
             System.out.printf( "\nO valor %d nao foi encotrado na arvore\n", x );
         }
-        
+
     }
-    
+
     public void iniciarPercurso( int tipo ) {
-    
+
         pararPercurso();
         percurso.clear();
 
@@ -405,15 +411,15 @@ public class VP {
             percurso.add( no );
         }
     }
-    
+
     public void clear() {
         raiz = null;
         nosDesenho.clear();
         percorrendo = false;
     }
-    
+
     public int getNivelAtual() {
-        
+
         int maior = 0;
         for( No no : nosDesenho ) {
             int valor = no.getNivel();
@@ -421,36 +427,30 @@ public class VP {
                 maior = valor;
             }
         }
-        
+
         return maior;
-        
+
     }
-    
+
+    public int getQuantidade() {
+        return nosDesenho.size();
+    }
+
     public void desenhar( EngineFrame e ) {
-        
-        // as posições já estão atualizadas (isso é feito no put)
-        
+
         for ( No no : nosDesenho ) {
             if ( no.getE() != null ) {
-                if( no.getE().isRed() ) {
-                    e.drawLine( no.getPos(), no.getE().getPos(), EngineFrame.RED );
-                } else {
-                    e.drawLine( no.getPos(), no.getE().getPos(), EngineFrame.BLACK );
-                }
+                No.ligar( e, no, no.getE(), no.getE().isRed() );
             }
             if ( no.getD() != null ) {
-                if( no.getD().isRed() ) {
-                    e.drawLine( no.getPos(), no.getD().getPos(), EngineFrame.RED );
-                } else {
-                    e.drawLine( no.getPos(), no.getD().getPos(), EngineFrame.BLACK );
-                }
+                No.ligar( e, no, no.getD(), no.getD().isRed() );
             }
         }
-        
+
         for ( No no : nosDesenho ) {
             no.desenhar( e );
         }
-        
+
     }
-    
+
 }

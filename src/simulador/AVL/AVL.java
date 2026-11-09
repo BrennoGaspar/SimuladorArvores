@@ -11,7 +11,7 @@ import simulador.No;
  * @author Brenno Gaspar Pinto & Victor Altran Soares
  */
 public class AVL {
-    
+
     private No raiz;
     private int ranqueAtual;
     private final List<No> nosDesenho = new ArrayList<>();
@@ -20,31 +20,31 @@ public class AVL {
     private final double ESPHOR = 50;
     private final double ESPVERT = 50;
     private final int MARGEMHOR = 50;
-    private final int MARGEMVERT = 100;
+    private final int MARGEMVERT = 120;
     private final int LARGURA = 1000;
     private final int LIMITE_RANDOM = 5;
-    
+
     private final List<No> percurso = new ArrayList<>();
     private int indicePercurso;
     private double tempoPercurso;
     private boolean percorrendo;
-    
+
     public void put( int c ) {
-        
+
         raiz = put( raiz, c );
         atualizarNos( ESPHOR, ESPVERT, MARGEMHOR, MARGEMVERT );
-        
+
     }
-    
+
     private No put( No no, int c ) {
-        
+
         if ( no == null ) {
             no = new No( RAIO, false, true );
             no.setC( c );
             no.setAltura( 1 );
             return no;
         }
-        
+
         if ( c < no.getC() ) {
             no.setE( put( no.getE(), c ) );
         } else if ( c > no.getC() ) {
@@ -52,143 +52,143 @@ public class AVL {
         } else {
             return no;
         }
-        
+
         no.setAltura( 1 + Math.max( altura( no.getE() ), altura( no.getD() ) ) );
-        
+
         // cálculo do balanceamento para o put
         int fb = fatorBalanceamento( no );
-        
+
         // left-left
         if ( fb > 1 && c < no.getE().getC() ) {
             return rotacaoDireita( no );
         }
-        
+
         // right-right
         if ( fb < -1 && c > no.getD().getC() ) {
             return rotacaoEsquerda( no );
         }
-        
+
         // left-right
         if ( fb > 1 && c > no.getE().getC() ) {
             no.setE( rotacaoEsquerda( no.getE() ) );
             return rotacaoDireita( no );
         }
-        
+
         // right-left
         if ( fb < -1 && c < no.getD().getC() ) {
             no.setD( rotacaoDireita( no.getD() ) );
             return rotacaoEsquerda( no );
         }
-        
+
         return no;
-        
+
     }
-    
+
         public void rem( int c ) {
-        
+
         raiz = rem( raiz, c );
         atualizarNos( ESPHOR, ESPVERT, MARGEMHOR, MARGEMVERT );
-        
+
     }
-    
-    private No rem( No no, int c ) { 
+
+    private No rem( No no, int c ) {
         if ( no == null ) {
             return null;
         }
-        
+
         if ( c < no.getC() ) {
             no.setE( rem( no.getE(), c ) );
         } else if ( c > no.getC() ) {
             no.setD( rem( no.getD(), c ) );
         } else {
-            
+
             if ( no.getE() == null ) {
                 return no.getD();
             }
-            
+
             if ( no.getD() == null ) {
                 return no.getE();
             }
-            
+
             No sucessor = min( no.getD() );
             no.setC( sucessor.getC() );
-            no.setD( rem( no.getD(), sucessor.getC() ) );      
+            no.setD( rem( no.getD(), sucessor.getC() ) );
         }
-        
+
         no.setAltura( 1 + Math.max( altura( no.getE() ), altura( no.getD() ) ) );
-        
+
         // cálculo do balanceamento para o rem
         int fb = fatorBalanceamento( no );
-        
+
         // left-left
         if ( fb > 1 && fatorBalanceamento( no.getE() ) >= 0 ) {
             return rotacaoDireita( no );
         }
-        
+
         // left-right
         if ( fb > 1 && fatorBalanceamento( no.getE() ) < 0 ) {
             no.setE( rotacaoEsquerda( no.getE() ) );
             return rotacaoDireita( no );
         }
-        
+
         // right-right
         if ( fb < -1 && fatorBalanceamento( no.getD() ) <= 0 ) {
             return rotacaoEsquerda( no );
         }
-        
+
         // right-left
         if ( fb < -1 && fatorBalanceamento( no.getD() ) > 0 ) {
             no.setD( rotacaoDireita( no.getD() ) );
             return rotacaoEsquerda( no );
         }
-        
-        return no;   
+
+        return no;
     }
-    
-    private No min( No no ) {   
+
+    private No min( No no ) {
         while ( no.getE() != null ) {
             no = no.getE();
-        }  
-        return no;   
+        }
+        return no;
     }
-      
+
     private No rotacaoDireita( No y ) {
         No x = y.getE();
         No t2 = x.getD();
-        
+
         x.setD( y );
         y.setE( t2 );
-        
+
         y.setAltura( 1 + Math.max( altura( y.getE() ), altura( y.getD() ) ) );
         x.setAltura( 1 + Math.max( altura( x.getE() ), altura( x.getD() ) ) );
-        
+
         return x;
-       
+
     }
-    
+
     private No rotacaoEsquerda( No x ) {
         No y = x.getD();
         No t2 = y.getE();
-        
+
         y.setE( x );
         x.setD( t2 );
-        
+
         x.setAltura( 1 + Math.max( altura( x.getE() ), altura( x.getD() ) ) );
         y.setAltura( 1 + Math.max( altura( y.getE() ), altura( y.getD() ) ) );
-        
+
         return y;
     }
-    
+
     private int altura( No no ) {
         return no == null ? 0 : no.getAltura();
     }
-    
+
     private int fatorBalanceamento( No no ) {
         return no == null ? 0 : altura( no.getE() ) - altura( no.getD() );
     }
-    
+
     public Integer chaveEm( int mouseX, int mouseY ) {
-    
+
         for ( No no : nosDesenho ) {
             double dx = mouseX - no.getPos().x;
             double dy = mouseY - no.getPos().y;
@@ -200,9 +200,9 @@ public class AVL {
         return null;
 
     }
-    
+
     public void atualizarNos( double espHor, double espVert, int margemHor, int margemVert ) {
-    
+
         pararPercurso();
         ranqueAtual = 0;
         nosDesenho.clear();
@@ -211,28 +211,33 @@ public class AVL {
         double deslocamento = ( LARGURA - espHor * (nosDesenho.size() - 1) ) / 2 - margemHor;
 
         for ( No no : nosDesenho ) {
-            no.setPos( new Vector2(no.getPos().x + deslocamento, no.getPos().y) );
+            no.setAlvo( new Vector2( margemHor + espHor * no.getRanque() + deslocamento, margemVert + espVert * no.getNivel() ) );
         }
 
     }
-    
+
     private void atualizarNos( No no, int nivel, double espHor, double espVert, int margemHor, int margemVert ) {
-        
+
         if ( no != null ) {
             atualizarNos( no.getE(), nivel + 1, espHor, espVert, margemHor, margemVert );
             no.setNivel( nivel );
             no.setRanque( ranqueAtual++ );
-            double posX = margemHor + espHor * no.getRanque();
-            double posY = margemVert + espVert * no.getNivel();
-            no.setPos( new Vector2( posX, posY ) );
             nosDesenho.add( no );
             atualizarNos( no.getD(), nivel + 1, espHor, espVert, margemHor, margemVert );
         }
-        
+
     }
-    
+
+    public void animar( double delta ) {
+
+        for ( No no : nosDesenho ) {
+            no.animar( delta );
+        }
+
+    }
+
     public void fatorDeBalanceamento( No no ) {
-        
+
         if ( no == null ) {
             return;
         }
@@ -242,15 +247,15 @@ public class AVL {
 
         int fator = alturaEsquerda - alturaDireita;
         no.setFatorBalanceamento( fator );
-        
+
     }
-    
+
     public int[] random() {
-        
+
         int[] valoresGerados = new int[LIMITE_RANDOM];
         Random random = new Random();
         for( int i = 0; i < LIMITE_RANDOM; i++ ) {
-            
+
             while ( true ) {
                 int valor = random.nextInt( 100 );
                 boolean jaTem = false;
@@ -265,14 +270,14 @@ public class AVL {
                     break;
                 }
             }
-            
+
         }
-        
+
         return valoresGerados;
     }
-    
+
     public void find( int x ) {
-        
+
         boolean encontrou = false;
         for( No no : nosDesenho ) {
             if( no.getC() == x ) {
@@ -282,15 +287,15 @@ public class AVL {
                 no.setFind( false );
             }
         }
-        
+
         if( !encontrou ) {
             System.out.printf( "\nO valor %d nao foi encotrado na arvore\n", x );
         }
-        
+
     }
-    
+
     public void iniciarPercurso( int tipo ) {
-    
+
         pararPercurso();
         percurso.clear();
 
@@ -371,15 +376,15 @@ public class AVL {
             percurso.add( no );
         }
     }
-    
+
     public void clear() {
         raiz = null;
         nosDesenho.clear();
         percorrendo = false;
     }
-    
+
     public int getNivelAtual() {
-        
+
         int maior = 0;
         for( No no : nosDesenho ) {
             int valor = no.getNivel();
@@ -387,27 +392,31 @@ public class AVL {
                 maior = valor;
             }
         }
-        
+
         return maior;
-        
+
     }
-    
+
+    public int getQuantidade() {
+        return nosDesenho.size();
+    }
+
     public void desenhar( EngineFrame e ) {
-        
+
         for ( No no : nosDesenho ) {
             if ( no.getE() != null ) {
-                e.drawLine( no.getPos(), no.getE().getPos(), EngineFrame.BLACK );
+                No.ligar( e, no, no.getE(), false );
             }
             if ( no.getD() != null ) {
-                e.drawLine( no.getPos(), no.getD().getPos(), EngineFrame.BLACK );
+                No.ligar( e, no, no.getD(), false );
             }
         }
-        
+
         for ( No no : nosDesenho ) {
             fatorDeBalanceamento( no );
             no.desenhar( e );
         }
-        
+
     }
-    
+
 }
