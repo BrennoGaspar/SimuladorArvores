@@ -77,6 +77,26 @@ O projeto foi desenvolvido com foco em:
 * 📈 Comparar na prática o desempenho e o formato de ABB, AVL e VP com as mesmas chaves.
 * 📁 Desenvolver um projeto organizado, modular e com código limpo visando boas práticas de engenharia de software.
 
+## 📸 Preview
+
+* Menu Inicial
+  
+<img width="1000" height="700" alt="image" src="https://github.com/user-attachments/assets/5e1b8403-726e-4830-b101-868fd4f232c9" />
+
+* Árvore ABB
+  
+ <img width="1000" height="700" alt="image" src="https://github.com/user-attachments/assets/40a3588b-c020-468c-b4c4-d2338807d1f2" />
+
+* Árvore AVL
+
+<img width="1000" height="700" alt="image" src="https://github.com/user-attachments/assets/56bcdd8f-061f-437b-81c6-6a2c4a3652a3" />
+
+ 
+* Árvore VP
+
+<img width="1000" height="700" alt="image" src="https://github.com/user-attachments/assets/eae356c8-212a-47f1-8200-e2ceecee5616" />
+
+
 ## 👨‍💻 Autores
 
 *  Brenno Gaspar Pinto
